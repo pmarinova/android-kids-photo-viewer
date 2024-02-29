@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 
+import com.bumptech.glide.Glide;
+
 import pm.android.kidsphotoviewer.databinding.ActivityPhotosBinding;
 
 /**
@@ -113,7 +115,9 @@ public class PhotosActivity extends AppCompatActivity {
 
         mVisible = true;
         mControlsView = binding.fullscreenContentControls;
-        mContentView = binding.fullscreenContent;
+        mContentView = binding.imageView;
+
+        Glide.with(this).load(R.drawable.cat).into(binding.imageView);
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
