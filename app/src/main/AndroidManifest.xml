@@ -16,8 +16,7 @@
             android:name=".PhotosActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
-            android:label="@string/title_activity_photos"
-            android:theme="@style/Theme.KidsPhotoViewer.Fullscreen">
+            android:label="@string/title_activity_photos">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
