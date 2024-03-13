@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Kids Photo Viewer</string>
-    <string name="title_activity_photos">Photos Activity</string>
+
+    <string name="title_activity_photos">Photos</string>
+    <string name="title_activity_prefs">Preferences</string>
+
+    <string name="pref_photos_provider">Photos source</string>
+    <string name="pref_photos_provider_server">Photo server</string>
+    <string name="pref_photos_provider_local">Local photos</string>
+
+    <string name="pref_slideshow_enable">Enable photos slideshow</string>
+    <string name="pref_slideshow_interval">Change photo every</string>
 </resources>

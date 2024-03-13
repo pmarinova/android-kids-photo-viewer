@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".PhotosActivity"
             android:label="@string/title_activity_photos"
@@ -22,6 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".PrefsActivity"
+            android:label="@string/title_activity_prefs"
+            android:exported="true" />
+
     </application>
 
 </manifest>

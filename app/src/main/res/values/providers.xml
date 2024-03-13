@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="photos_providers_ids">
+        <item>photo_server</item>
+        <item>local_photos</item>
+    </string-array>
+
+    <string-array name="photos_providers_labels">
+        <item>@string/pref_photos_provider_server</item>
+        <item>@string/pref_photos_provider_local</item>
+    </string-array>
+
+</resources>
