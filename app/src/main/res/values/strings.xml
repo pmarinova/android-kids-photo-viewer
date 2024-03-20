@@ -4,10 +4,19 @@
     <string name="title_activity_photos">Photos</string>
     <string name="title_activity_prefs">Preferences</string>
 
-    <string name="pref_photos_provider">Photos source</string>
-    <string name="pref_photos_provider_server">Photo server</string>
-    <string name="pref_photos_provider_local">Local photos</string>
+    <string name="pref_key_photos_provider">photos_provider</string>
+    <string name="pref_label_photos_provider">Photos source</string>
 
-    <string name="pref_slideshow_enable">Enable photos slideshow</string>
-    <string name="pref_slideshow_interval">Change photo every</string>
+    <string name="photo_provider_local">local_photos</string>
+    <string name="photo_provider_local_label">Local photos</string>
+
+    <string name="photo_provider_server">photo_server</string>
+    <string name="photo_provider_server_label">Photo server</string>
+
+    <string name="pref_key_slideshow_enable">slideshow_enable</string>
+    <string name="pref_label_slideshow_interval">Change photo every</string>
+
+    <string name="pref_key_slideshow_interval">slideshow_interval</string>
+    <string name="pref_label_slideshow_enable">Enable photos slideshow</string>
+
 </resources>

@@ -1,0 +1,13 @@
+<resources>
+
+    <string-array name="photos_providers_ids">
+        <item>@string/photo_provider_local</item>
+        <item>@string/photo_provider_server</item>
+    </string-array>
+
+    <string-array name="photos_providers_labels">
+        <item>@string/photo_provider_local_label</item>
+        <item>@string/photo_provider_server_label</item>
+    </string-array>
+
+</resources>

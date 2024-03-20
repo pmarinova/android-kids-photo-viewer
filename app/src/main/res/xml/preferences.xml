@@ -2,19 +2,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:key="photos_provider"
-        android:title="@string/pref_photos_provider"
+        android:key="@string/pref_key_photos_provider"
+        android:title="@string/pref_label_photos_provider"
         android:entries="@array/photos_providers_labels"
         android:entryValues="@array/photos_providers_ids"
-        android:summary="@string/pref_photos_provider_server" />
+        android:defaultValue="@string/photo_provider_local"/>
 
     <SwitchPreferenceCompat
-        android:key="slideshow_enable"
-        android:title="@string/pref_slideshow_enable" />
+        android:key="@string/pref_key_slideshow_enable"
+        android:title="@string/pref_label_slideshow_enable" />
 
-    <EditTextPreference
-        android:key="slideshow_interval"
-        android:title="@string/pref_slideshow_interval"
-        android:summary="5 seconds" />
+    <SeekBarPreference
+        android:key="@string/pref_key_slideshow_interval"
+        android:title="@string/pref_label_slideshow_interval"
+        android:dependency="@string/pref_key_slideshow_enable"
+        android:min="3"
+        android:max="60"
+        android:defaultValue="5" />
 
 </PreferenceScreen>
