@@ -1,6 +1,8 @@
 package pm.android.kidsphotoviewer;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -8,7 +10,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import java.util.concurrent.TimeUnit;
+
 public class PhotosActivity extends AppCompatActivity {
+
+    private ViewPager photosPager;
+
+    private Handler mainThreadHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,9 +25,12 @@ public class PhotosActivity extends AppCompatActivity {
 
         hideSystemBars();
 
+        photosPager = findViewById(R.id.photos_view_pager);
+        mainThreadHandler = new Handler(Looper.getMainLooper());
+
         new PhotosProvider(this).loadPhotosList((photos) -> {
-            ViewPager photosPager = findViewById(R.id.photos_view_pager);
             photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
+            mainThreadHandler.postDelayed(this::nextPhoto, TimeUnit.SECONDS.toMillis(5));
         });
     }
 
@@ -31,5 +42,10 @@ public class PhotosActivity extends AppCompatActivity {
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
 
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
+
+    private void nextPhoto() {
+        photosPager.setCurrentItem(photosPager.getCurrentItem() + 1, false);
+        mainThreadHandler.postDelayed(this::nextPhoto, TimeUnit.SECONDS.toMillis(5));
     }
 }
