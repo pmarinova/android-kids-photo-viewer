@@ -18,6 +18,8 @@ public class PhotosActivity extends AppCompatActivity {
 
     private Handler mainThreadHandler;
 
+    private boolean slideshowRunning = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +32,19 @@ public class PhotosActivity extends AppCompatActivity {
 
         new PhotosProvider(this).loadPhotosList((photos) -> {
             photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
-            mainThreadHandler.postDelayed(this::nextPhoto, TimeUnit.SECONDS.toMillis(5));
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startSlideshow();
+    }
+
+    @Override
+    protected void onPause() {
+        stopSlideshow();
+        super.onPause();
     }
 
     private void hideSystemBars() {
@@ -44,8 +57,21 @@ public class PhotosActivity extends AppCompatActivity {
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
     }
 
-    private void nextPhoto() {
+    private void startSlideshow() {
+        this.slideshowRunning = true;
+        mainThreadHandler.postDelayed(this::switchPhoto, TimeUnit.SECONDS.toMillis(5));
+    }
+
+    private void stopSlideshow() {
+        mainThreadHandler.removeCallbacks(this::switchPhoto);
+        this.slideshowRunning = false;
+    }
+
+    private void switchPhoto() {
+        if (!slideshowRunning) {
+            return;
+        }
         photosPager.setCurrentItem(photosPager.getCurrentItem() + 1, false);
-        mainThreadHandler.postDelayed(this::nextPhoto, TimeUnit.SECONDS.toMillis(5));
+        mainThreadHandler.postDelayed(this::switchPhoto, TimeUnit.SECONDS.toMillis(5));
     }
 }
