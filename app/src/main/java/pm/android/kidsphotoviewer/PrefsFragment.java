@@ -3,18 +3,16 @@ package pm.android.kidsphotoviewer;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SeekBarPreference;
-import androidx.preference.SwitchPreferenceCompat;
 
 public class PrefsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ListPreference photosProvider;
-    private SwitchPreferenceCompat slideshowEnable;
     private SeekBarPreference slideshowInterval;
 
     private SharedPreferences prefs;
@@ -22,9 +20,8 @@ public class PrefsFragment extends PreferenceFragmentCompat
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-        photosProvider = findPreference(R.string.pref_key_photos_provider);
-        slideshowEnable = findPreference(R.string.pref_key_slideshow_enable);
-        slideshowInterval = findPreference(R.string.pref_key_slideshow_interval);
+        photosProvider = findPreference(R.string.pref_key_photos_provider, ListPreference.class);
+        slideshowInterval = findPreference(R.string.pref_key_slideshow_interval, SeekBarPreference.class);
         prefs = PreferenceManager.getDefaultSharedPreferences(requireActivity());
     }
 
@@ -51,7 +48,8 @@ public class PrefsFragment extends PreferenceFragmentCompat
         slideshowInterval.setSummary(slideshowInterval.getValue() + " seconds");
     }
 
-    private <T> T findPreference(int keyResId) {
-        return (T)findPreference(getString(keyResId));
+    private <T extends Preference> T findPreference(int keyResId, Class<T> prefType) {
+        Preference pref = findPreference(getString(keyResId));
+        return prefType.cast(pref);
     }
 }
