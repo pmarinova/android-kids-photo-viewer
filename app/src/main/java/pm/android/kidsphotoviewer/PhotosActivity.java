@@ -1,5 +1,6 @@
 package pm.android.kidsphotoviewer;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.concurrent.TimeUnit;
@@ -17,6 +19,8 @@ public class PhotosActivity extends AppCompatActivity {
     private ViewPager photosPager;
 
     private Handler mainThreadHandler;
+
+    private SharedPreferences prefs;
 
     private boolean slideshowRunning = false;
 
@@ -29,6 +33,7 @@ public class PhotosActivity extends AppCompatActivity {
 
         photosPager = findViewById(R.id.photos_view_pager);
         mainThreadHandler = new Handler(Looper.getMainLooper());
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         new PhotosProvider(this).loadPhotosList((photos) -> {
             photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
@@ -58,20 +63,35 @@ public class PhotosActivity extends AppCompatActivity {
     }
 
     private void startSlideshow() {
-        this.slideshowRunning = true;
-        mainThreadHandler.postDelayed(this::switchPhoto, TimeUnit.SECONDS.toMillis(5));
+        if (isSlideshowEnabled()) {
+            this.slideshowRunning = true;
+            scheduleNextPhoto();
+        }
     }
 
     private void stopSlideshow() {
-        mainThreadHandler.removeCallbacks(this::switchPhoto);
+        mainThreadHandler.removeCallbacks(this::nextPhoto);
         this.slideshowRunning = false;
     }
 
-    private void switchPhoto() {
-        if (!slideshowRunning) {
-            return;
+    private void nextPhoto() {
+        if (slideshowRunning) {
+            int nextItem = photosPager.getCurrentItem() + 1;
+            photosPager.setCurrentItem(nextItem, false);
+            scheduleNextPhoto();
         }
-        photosPager.setCurrentItem(photosPager.getCurrentItem() + 1, false);
-        mainThreadHandler.postDelayed(this::switchPhoto, TimeUnit.SECONDS.toMillis(5));
+    }
+
+    private void scheduleNextPhoto() {
+        long delay = TimeUnit.SECONDS.toMillis(getSlideshowInterval());
+        mainThreadHandler.postDelayed(this::nextPhoto, delay);
+    }
+
+    private boolean isSlideshowEnabled() {
+        return prefs.getBoolean(getString(R.string.pref_key_slideshow_enable), false);
+    }
+
+    private int getSlideshowInterval() {
+        return prefs.getInt(getString(R.string.pref_key_slideshow_interval), 5);
     }
 }
