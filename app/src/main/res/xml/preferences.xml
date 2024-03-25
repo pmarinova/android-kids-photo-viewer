@@ -17,7 +17,7 @@
         android:title="@string/pref_label_slideshow_interval"
         android:dependency="@string/pref_key_slideshow_enable"
         android:min="3"
-        android:max="60"
+        android:max="15"
         android:defaultValue="5" />
 
 </PreferenceScreen>
