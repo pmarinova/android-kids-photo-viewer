@@ -35,7 +35,7 @@ public class PhotosActivity extends AppCompatActivity {
         mainThreadHandler = new Handler(Looper.getMainLooper());
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        new PhotosProvider(this).loadPhotosList((photos) -> {
+        getPhotosProvider().loadPhotosList((photos) -> {
             photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
         });
     }
@@ -85,6 +85,11 @@ public class PhotosActivity extends AppCompatActivity {
     private void scheduleNextPhoto() {
         long delay = TimeUnit.SECONDS.toMillis(getSlideshowInterval());
         mainThreadHandler.postDelayed(this::nextPhoto, delay);
+    }
+
+    private PhotosProvider getPhotosProvider() {
+        String id = prefs.getString(getString(R.string.pref_key_photos_provider), "");
+        return id.equals(getString(R.string.photo_provider_server)) ? new PhotoServerProvider(this) : new LocalPhotosProvider();
     }
 
     private boolean isSlideshowEnabled() {
