@@ -5,10 +5,13 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -39,22 +42,36 @@ public class LocalPhotosProvider implements PhotosProvider {
     }
 
     private List<Uri> queryMediaStore() {
-        Log.d(TAG, "Querying media store...");
+
         List<Uri> photos = new ArrayList<>();
+
+        Log.d(TAG, "Querying media store...");
         try (Cursor cursor = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{ MediaStore.MediaColumns._ID },
+                new String[]{ MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA },
                 null, null, null
         )) {
+
             Log.d(TAG, "Media items found: " + cursor.getCount());
+
+            File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            String cameraDirPath = cameraDir.getAbsolutePath();
+
             int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
+            int dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+
             while (cursor.moveToNext()) {
                 long id = cursor.getLong(idColumnIndex);
-                Uri contentUri = ContentUris.withAppendedId(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-                photos.add(contentUri);
+                String path = cursor.getString(dataColumnIndex);
+
+                if (path.startsWith(cameraDirPath)) {
+                    Uri contentUri = ContentUris.withAppendedId(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                    photos.add(contentUri);
+                }
             }
         }
+
         return photos;
     }
 }
