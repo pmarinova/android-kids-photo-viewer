@@ -18,9 +18,9 @@ public class PhotosActivity extends AppCompatActivity {
 
     private ViewPager photosPager;
 
-    private Handler mainThreadHandler;
-
     private SharedPreferences prefs;
+
+    private Handler mainThreadHandler;
 
     private boolean slideshowRunning = false;
 
@@ -32,8 +32,9 @@ public class PhotosActivity extends AppCompatActivity {
         hideSystemBars();
 
         photosPager = findViewById(R.id.photos_view_pager);
-        mainThreadHandler = new Handler(Looper.getMainLooper());
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        mainThreadHandler = ((App)getApplication()).getMainThreadHandler();
 
         getPhotosProvider().loadPhotosList((photos) -> {
             photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
