@@ -3,7 +3,6 @@ package pm.android.kidsphotoviewer;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -36,9 +35,8 @@ public class PhotosActivity extends AppCompatActivity {
 
         mainThreadHandler = ((App)getApplication()).getMainThreadHandler();
 
-        getPhotosProvider().loadPhotosList((photos) -> {
-            photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
-        });
+        getPhotosProvider().loadPhotosList((photos) ->
+            photosPager.setAdapter(new PhotosPagerAdapter(this, photos)));
     }
 
     @Override
@@ -90,7 +88,9 @@ public class PhotosActivity extends AppCompatActivity {
 
     private PhotosProvider getPhotosProvider() {
         String id = prefs.getString(getString(R.string.pref_key_photos_provider), "");
-        return id.equals(getString(R.string.photo_provider_server)) ? new PhotoServerProvider(this) : new LocalPhotosProvider();
+        return id.equals(getString(R.string.photo_provider_server))
+                ? new PhotoServerProvider(this)
+                : new LocalPhotosProvider(this);
     }
 
     private boolean isSlideshowEnabled() {
