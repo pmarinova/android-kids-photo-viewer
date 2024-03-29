@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -43,32 +42,33 @@ public class LocalPhotosProvider implements PhotosProvider {
 
     private List<Uri> queryMediaStore() {
 
-        List<Uri> photos = new ArrayList<>();
+        File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        String cameraDirPath = cameraDir.getAbsolutePath();
+        Log.d(TAG, "Camera dir: " + cameraDirPath);
 
-        Log.d(TAG, "Querying media store...");
+        String[] projection = new String[] { MediaStore.MediaColumns._ID };
+        String selection = MediaStore.MediaColumns.DATA + " LIKE ?";
+        String[] selectionArgs = new String[] { cameraDirPath + "%" };
+
+        Log.d(TAG, "Querying media store for images from camera dir...");
+
+        List<Uri> photos = new ArrayList<>();
         try (Cursor cursor = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{ MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA },
-                null, null, null
+                projection,
+                selection,
+                selectionArgs,
+                null
         )) {
 
-            Log.d(TAG, "Media items found: " + cursor.getCount());
-
-            File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            String cameraDirPath = cameraDir.getAbsolutePath();
+            Log.d(TAG, "Images found: " + cursor.getCount());
 
             int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
-            int dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-
             while (cursor.moveToNext()) {
                 long id = cursor.getLong(idColumnIndex);
-                String path = cursor.getString(dataColumnIndex);
-
-                if (path.startsWith(cameraDirPath)) {
-                    Uri contentUri = ContentUris.withAppendedId(
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-                    photos.add(contentUri);
-                }
+                Uri contentUri = ContentUris.withAppendedId(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                photos.add(contentUri);
             }
         }
 
