@@ -96,9 +96,13 @@ public class PhotosActivity extends AppCompatActivity {
 
     private PhotosProvider getPhotosProvider() {
         String id = prefs.getString(getString(R.string.pref_key_photos_provider), "");
-        return id.equals(getString(R.string.photo_provider_server))
-                ? new PhotoServerProvider(this)
-                : new LocalPhotosProvider(this);
+        if (id.equals(getString(R.string.photo_provider_server))) {
+            return new PhotoServerProvider(this);
+        }
+        if (id.equals(getString(R.string.photo_provider_local))) {
+            return new LocalPhotosProvider(this);
+        }
+        return new BuiltInPhotosProvider(this);
     }
 
     private boolean isSlideshowEnabled() {
