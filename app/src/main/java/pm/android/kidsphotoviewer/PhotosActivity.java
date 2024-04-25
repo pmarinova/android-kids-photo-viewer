@@ -3,6 +3,8 @@ package pm.android.kidsphotoviewer;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -16,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class PhotosActivity extends AppCompatActivity {
 
     private ViewPager photosPager;
+
+    private ProgressBar loadingIndicator;
 
     private SharedPreferences prefs;
 
@@ -31,12 +35,16 @@ public class PhotosActivity extends AppCompatActivity {
         hideSystemBars();
 
         photosPager = findViewById(R.id.photos_view_pager);
+        loadingIndicator = findViewById(R.id.loading_indicator);
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         mainThreadHandler = ((App)getApplication()).getMainThreadHandler();
 
-        getPhotosProvider().loadPhotosList((photos) ->
-            photosPager.setAdapter(new PhotosPagerAdapter(this, photos)));
+        getPhotosProvider().loadPhotosList((photos) -> {
+            loadingIndicator.setVisibility(View.GONE);
+            photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
+        });
     }
 
     @Override
