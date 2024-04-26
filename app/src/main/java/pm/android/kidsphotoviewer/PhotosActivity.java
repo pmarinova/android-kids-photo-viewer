@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import pm.android.kidsphotoviewer.providers.BuiltInPhotosProvider;
@@ -47,6 +48,9 @@ public class PhotosActivity extends AppCompatActivity {
 
         getPhotosProvider().loadPhotosList((photos) -> {
             loadingIndicator.setVisibility(View.GONE);
+            if (isShuffleEnabled()) {
+                Collections.shuffle(photos);
+            }
             photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
         });
     }
@@ -107,6 +111,10 @@ public class PhotosActivity extends AppCompatActivity {
             return new LocalPhotosProvider(this);
         }
         return new BuiltInPhotosProvider(this);
+    }
+
+    private boolean isShuffleEnabled() {
+        return prefs.getBoolean(getString(R.string.pref_key_shuffle_enable), true);
     }
 
     private boolean isSlideshowEnabled() {

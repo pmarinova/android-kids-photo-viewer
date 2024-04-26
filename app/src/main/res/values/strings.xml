@@ -16,6 +16,9 @@
     <string name="photo_provider_server">photo_server</string>
     <string name="photo_provider_server_label">Photo server</string>
 
+    <string name="pref_key_shuffle_enable">shuffle_enable</string>
+    <string name="pref_label_shuffle">Shuffle photos</string>
+
     <string name="pref_key_slideshow_enable">slideshow_enable</string>
     <string name="pref_label_slideshow_interval">Change photo every</string>
 

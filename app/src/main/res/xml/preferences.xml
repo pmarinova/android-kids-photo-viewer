@@ -9,6 +9,11 @@
         android:defaultValue="@string/photo_provider_local"/>
 
     <SwitchPreferenceCompat
+        android:key="@string/pref_key_shuffle_enable"
+        android:title="@string/pref_label_shuffle"
+        android:defaultValue="true" />
+
+    <SwitchPreferenceCompat
         android:key="@string/pref_key_slideshow_enable"
         android:title="@string/pref_label_slideshow_enable" />
 

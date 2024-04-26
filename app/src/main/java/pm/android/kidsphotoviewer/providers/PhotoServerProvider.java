@@ -12,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -39,11 +38,7 @@ public class PhotoServerProvider implements PhotosProvider {
     public void loadPhotosList(final Consumer<List<Uri>> callback) {
         this.requestQueue.add(new JsonArrayRequest(
                 PHOTOS_LIST_URL,
-                (response) -> {
-                    List<Uri> photos = getPhotoURLs(jsonArrayToList(response));
-                    Collections.shuffle(photos);
-                    callback.accept(photos);
-                },
+                (response) -> callback.accept(getPhotoURLs(jsonArrayToList(response))),
                 (error) -> Log.e(TAG, "request failed: " + error)
         ));
     }
