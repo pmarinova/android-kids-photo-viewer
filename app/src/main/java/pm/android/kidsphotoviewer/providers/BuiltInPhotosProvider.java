@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 
 import androidx.annotation.AnyRes;
+import androidx.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,9 +32,9 @@ public class BuiltInPhotosProvider implements PhotosProvider {
     }
 
     @Override
-    public void loadPhotosList(Consumer<List<Uri>> callback) {
+    public void loadPhotosList(Consumer<List<Uri>> onSuccess, @Nullable Consumer<String> onError) {
         List<Uri> photos = PHOTOS.stream().map(this::getUri).collect(Collectors.toList());
-        callback.accept(photos);
+        onSuccess.accept(photos);
     }
 
     private Uri getUri(@AnyRes int resId) {

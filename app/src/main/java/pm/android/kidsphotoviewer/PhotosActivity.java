@@ -4,7 +4,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -26,6 +28,9 @@ public class PhotosActivity extends AppCompatActivity {
 
     private ProgressBar loadingIndicator;
 
+    private LinearLayout errorView;
+    private TextView errorText;
+
     private SharedPreferences prefs;
 
     private Handler mainThreadHandler;
@@ -41,6 +46,8 @@ public class PhotosActivity extends AppCompatActivity {
 
         photosPager = findViewById(R.id.photos_view_pager);
         loadingIndicator = findViewById(R.id.loading_indicator);
+        errorView = findViewById(R.id.error_view);
+        errorText = errorView.findViewById(R.id.error_txt_cause);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -52,7 +59,8 @@ public class PhotosActivity extends AppCompatActivity {
                 Collections.shuffle(photos);
             }
             photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
-        });
+
+        }, (error) -> showErrorView(error));
     }
 
     @Override
@@ -100,6 +108,12 @@ public class PhotosActivity extends AppCompatActivity {
     private void scheduleNextPhoto() {
         long delay = TimeUnit.SECONDS.toMillis(getSlideshowInterval());
         mainThreadHandler.postDelayed(this::nextPhoto, delay);
+    }
+
+    private void showErrorView(String error) {
+        loadingIndicator.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+        errorText.setText(error);
     }
 
     private PhotosProvider getPhotosProvider() {

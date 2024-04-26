@@ -1,14 +1,17 @@
 package pm.android.kidsphotoviewer.providers;
 
-import android.content.ContentResolver;
+import android.Manifest;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ import java.util.function.Consumer;
 
 import pm.android.kidsphotoviewer.App;
 import pm.android.kidsphotoviewer.PhotosProvider;
+import pm.android.kidsphotoviewer.R;
 
 public class LocalPhotosProvider implements PhotosProvider {
 
@@ -27,20 +31,27 @@ public class LocalPhotosProvider implements PhotosProvider {
 
     private final Handler mainThreadHandler;
 
-    private final ContentResolver contentResolver;
+    private final Context context;
 
     public LocalPhotosProvider(Context context) {
         this.executor = ((App)context.getApplicationContext()).getExecutorService();
         this.mainThreadHandler = ((App)context.getApplicationContext()).getMainThreadHandler();
-        this.contentResolver = context.getContentResolver();
+        this.context = context;
     }
 
     @Override
-    public void loadPhotosList(Consumer<List<Uri>> callback) {
-        executor.execute(() -> {
-            List<Uri> photos = queryMediaStore();
-            mainThreadHandler.post(() -> callback.accept(photos));
-        });
+    public void loadPhotosList(Consumer<List<Uri>> onSuccess, @Nullable Consumer<String> onError) {
+        if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            executor.execute(() -> {
+                List<Uri> photos = queryMediaStore();
+                mainThreadHandler.post(() -> onSuccess.accept(photos));
+            });
+        } else {
+            if (onError != null) {
+                String error = getString(R.string.error_local_photos_no_permission);
+                onError.accept(error);
+            }
+        }
     }
 
     private List<Uri> queryMediaStore() {
@@ -56,7 +67,7 @@ public class LocalPhotosProvider implements PhotosProvider {
         Log.d(TAG, "Querying media store for images from camera dir...");
 
         List<Uri> photos = new ArrayList<>();
-        try (Cursor cursor = contentResolver.query(
+        try (Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 selection,
@@ -76,5 +87,9 @@ public class LocalPhotosProvider implements PhotosProvider {
         }
 
         return photos;
+    }
+
+    private String getString(int resId) {
+        return context.getString(resId);
     }
 }

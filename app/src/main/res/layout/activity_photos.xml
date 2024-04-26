@@ -18,4 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
+    <include layout="@layout/error" />
+
 </FrameLayout>

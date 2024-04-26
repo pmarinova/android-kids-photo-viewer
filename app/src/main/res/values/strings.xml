@@ -25,4 +25,9 @@
     <string name="pref_key_slideshow_interval">slideshow_interval</string>
     <string name="pref_label_slideshow_enable">Enable photos slideshow</string>
 
+    <string name="error_view_main_message">Oops! There was an error :(</string>
+    <string name="error_view_retry_button_text">Retry</string>
+
+    <string name="error_local_photos_no_permission">Permission to access local photos not granted</string>
+
 </resources>

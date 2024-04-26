@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
@@ -35,10 +37,10 @@ public class PhotoServerProvider implements PhotosProvider {
     }
 
     @Override
-    public void loadPhotosList(final Consumer<List<Uri>> callback) {
+    public void loadPhotosList(Consumer<List<Uri>> onSuccess, @Nullable Consumer<String> onError) {
         this.requestQueue.add(new JsonArrayRequest(
                 PHOTOS_LIST_URL,
-                (response) -> callback.accept(getPhotoURLs(jsonArrayToList(response))),
+                (response) -> onSuccess.accept(getPhotoURLs(jsonArrayToList(response))),
                 (error) -> Log.e(TAG, "request failed: " + error)
         ));
     }
