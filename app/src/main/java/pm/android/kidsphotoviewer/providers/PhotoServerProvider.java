@@ -1,4 +1,4 @@
-package pm.android.kidsphotoviewer;
+package pm.android.kidsphotoviewer.providers;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import pm.android.kidsphotoviewer.PhotosProvider;
 
 public class PhotoServerProvider implements PhotosProvider {
 

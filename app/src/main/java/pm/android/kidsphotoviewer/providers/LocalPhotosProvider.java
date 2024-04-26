@@ -1,4 +1,4 @@
-package pm.android.kidsphotoviewer;
+package pm.android.kidsphotoviewer.providers;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
+
+import pm.android.kidsphotoviewer.App;
+import pm.android.kidsphotoviewer.PhotosProvider;
 
 public class LocalPhotosProvider implements PhotosProvider {
 

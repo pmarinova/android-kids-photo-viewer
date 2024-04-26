@@ -15,6 +15,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import java.util.concurrent.TimeUnit;
 
+import pm.android.kidsphotoviewer.providers.BuiltInPhotosProvider;
+import pm.android.kidsphotoviewer.providers.LocalPhotosProvider;
+import pm.android.kidsphotoviewer.providers.PhotoServerProvider;
+
 public class PhotosActivity extends AppCompatActivity {
 
     private ViewPager photosPager;
