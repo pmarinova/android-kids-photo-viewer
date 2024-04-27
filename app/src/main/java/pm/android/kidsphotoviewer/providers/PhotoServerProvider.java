@@ -41,7 +41,7 @@ public class PhotoServerProvider implements PhotosProvider {
         this.requestQueue.add(new JsonArrayRequest(
                 PHOTOS_LIST_URL,
                 (response) -> onSuccess.accept(getPhotoURLs(jsonArrayToList(response))),
-                (error) -> Log.e(TAG, "request failed: " + error)
+                (error) -> { if (onError != null) onError.accept(error.getMessage()); }
         ));
     }
 
