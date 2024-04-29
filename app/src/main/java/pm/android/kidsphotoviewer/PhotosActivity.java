@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class PhotosActivity extends AppCompatActivity {
 
     private LinearLayout errorView;
     private TextView errorText;
+    Button retryButton;
 
     private SharedPreferences prefs;
 
@@ -48,19 +50,15 @@ public class PhotosActivity extends AppCompatActivity {
         loadingIndicator = findViewById(R.id.loading_indicator);
         errorView = findViewById(R.id.error_view);
         errorText = errorView.findViewById(R.id.error_txt_cause);
+        retryButton = errorView.findViewById(R.id.error_btn_retry);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         mainThreadHandler = ((App)getApplication()).getMainThreadHandler();
 
-        getPhotosProvider().loadPhotosList((photos) -> {
-            loadingIndicator.setVisibility(View.GONE);
-            if (isShuffleEnabled()) {
-                Collections.shuffle(photos);
-            }
-            photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
+        retryButton.setOnClickListener((View v) -> loadPhotos());
 
-        }, (error) -> showErrorView(error));
+        loadPhotos();
     }
 
     @Override
@@ -83,6 +81,23 @@ public class PhotosActivity extends AppCompatActivity {
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
 
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
+
+    private void loadPhotos() {
+        hideErrorView();
+        loadingIndicator.setVisibility(View.VISIBLE);
+
+        getPhotosProvider().loadPhotosList((photos) -> {
+            loadingIndicator.setVisibility(View.GONE);
+            if (isShuffleEnabled()) {
+                Collections.shuffle(photos);
+            }
+            photosPager.setAdapter(new PhotosPagerAdapter(this, photos));
+
+        }, (error) -> {
+            loadingIndicator.setVisibility(View.GONE);
+            showErrorView(error);
+        });
     }
 
     private void startSlideshow() {
@@ -111,9 +126,13 @@ public class PhotosActivity extends AppCompatActivity {
     }
 
     private void showErrorView(String error) {
-        loadingIndicator.setVisibility(View.GONE);
         errorView.setVisibility(View.VISIBLE);
         errorText.setText(error);
+    }
+
+    private void hideErrorView() {
+        errorView.setVisibility(View.GONE);
+        errorText.setText("");
     }
 
     private PhotosProvider getPhotosProvider() {
