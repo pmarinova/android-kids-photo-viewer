@@ -4,6 +4,9 @@
     <string name="title_activity_photos">Photos</string>
     <string name="title_activity_prefs">Preferences</string>
 
+    <string name="activity_main_button_start">Start</string>
+    <string name="activity_main_button_settings">Settings</string>
+
     <string name="pref_key_photos_provider">photos_provider</string>
     <string name="pref_label_photos_provider">Photos source</string>
 

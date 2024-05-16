@@ -17,16 +17,20 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".PhotosActivity"
-            android:label="@string/title_activity_photos"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".PhotosActivity"
+            android:label="@string/title_activity_photos"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true" />
 
         <activity
             android:name=".PrefsActivity"
