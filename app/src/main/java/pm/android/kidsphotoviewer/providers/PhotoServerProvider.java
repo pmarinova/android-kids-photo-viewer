@@ -44,6 +44,12 @@ public class PhotoServerProvider implements PhotosProvider {
     @Override
     public void loadPhotosList(Consumer<List<Uri>> onSuccess, @Nullable Consumer<String> onError) {
 
+        Consumer<String> errorHandler = (error) -> {
+            if (onError != null) {
+                onError.accept(error);
+            }
+        };
+
         Log.d(TAG, "Resolving photo server service...");
         this.nsdServiceResolver.resolveService(
                 PHOTO_SERVER_SERVICE_TYPE,
@@ -58,10 +64,10 @@ public class PhotoServerProvider implements PhotosProvider {
                     this.requestQueue.add(new JsonArrayRequest(
                             photosListURL,
                             (response) -> onSuccess.accept(getPhotoURLs(photoServerURL, jsonArrayToList(response))),
-                            (error) -> { if (onError != null) onError.accept(error.getMessage()); }
+                            (error) -> errorHandler.accept(error.getMessage())
                     ));
                 },
-                (error) -> { if (onError != null) onError.accept(error); },
+                errorHandler,
                 10000);
     }
 
